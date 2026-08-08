@@ -6,29 +6,93 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Stephen Dooley</title>
         <link rel="stylesheet" href="./index.css" />
+        <style>
+            /* Trailing dots after "producer" type themselves out and delete on a loop:
+               0 -> 1 -> 2 -> 3 -> 2 -> 1 and back to 0. All three dots animate, so the
+               run empties completely at the top of each cycle.
+               The dots hold their space at all times and only toggle opacity, so the
+               heading never reflows. Timing is discrete rather than eased, to read as
+               keystrokes instead of a fade.
+               Cycle is 5.125s: a 2s pause on empty, then five 625ms keystrokes
+               (2000 + 5 x 625). The pause is 39.02% of the cycle, which is where the
+               odd-looking keyframe percentages below come from. */
+            .typing-dots > .dot {
+                opacity: 0;
+                animation: 5.125s steps(1, end) infinite;
+            }
+            .typing-dots > .dot-1 {
+                animation-name: typing-dot-1;
+            }
+            .typing-dots > .dot-2 {
+                animation-name: typing-dot-2;
+            }
+            .typing-dots > .dot-3 {
+                animation-name: typing-dot-3;
+            }
+
+            /* Phase boundaries, as a fraction of the 5.125s cycle:
+                 0      -> 39.02%   empty, the 2s pause
+                 39.02% -> 51.22%   .
+                 51.22% -> 63.41%   ..
+                 63.41% -> 75.61%   ...
+                 75.61% -> 87.80%   ..
+                 87.80% -> 100%     .        then straight back to empty */
+            @keyframes typing-dot-1 {
+                0%, 38.9% { opacity: 0; }
+                39.0%, 100% { opacity: 1; }
+            }
+            @keyframes typing-dot-2 {
+                0%, 51.1% { opacity: 0; }
+                51.2%, 87.7% { opacity: 1; }
+                87.8%, 100% { opacity: 0; }
+            }
+            @keyframes typing-dot-3 {
+                0%, 63.3% { opacity: 0; }
+                63.4%, 75.5% { opacity: 1; }
+                75.6%, 100% { opacity: 0; }
+            }
+
+            /* No motion: hold a single period so the sentence stays punctuated. */
+            @media (prefers-reduced-motion: reduce) {
+                .typing-dots > .dot {
+                    animation: none;
+                    opacity: 0;
+                }
+                .typing-dots > .dot-1 {
+                    opacity: 1;
+                }
+            }
+        </style>
     </head>
     <!-- style="background-color: rgba(117, 103, 122, 1)" -->
 
     <body class="bg-gray-300 font-mono dark:bg-gray-800 dark:text-gray-300">
         <div class="site-content">
-            <div class="nav flex text-base justify-between md:px-14 px-7 my-7">
+            <div class="nav flex text-base justify-end md:px-14 px-7 my-7">
+                <!-- Apps link temporarily hidden. The apps page itself still lives at
+                     ./apps/index.html; only this nav button is hidden. To restore it,
+                     un-comment the .logo div below AND switch justify-end back to
+                     justify-between on the .nav div above, so that "Contact me" is
+                     pushed back to the right instead of sitting next to the logo. -->
+                <!--
                 <div class="logo">
                     <h2 class=""><a class="hover:text-gray-500" href="./apps/index.html">Apps →</a></h2>
                 </div>
+                -->
                 <div><a class="hover:text-gray-500" href="mailto:stephen.dooley6@gmail.com" target="_blank">Contact me</a></div>
             </div>
 
             <div class="main md:px-14 2xl:py-8 px-7 py-10">
                 <div class="container max-w-full md:max-w-3xl">
                     <h1 class="text-4xl md:text-6xl">
-                        <dif style="color:#5E1148">Stephen Dooley</dif> is an engineering leader and music producer.
+                        <dif style="color:#5E1148">Stephen Dooley</dif> is an engineering leader and music producer<span class="typing-dots" aria-hidden="true"><span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span>
                     </h1>
                     <br />
 
                     <h2 class="text-3xl md:text-3xl">Passionate about art and technology.</h2>
 
                     <p class="text-2xl py-7">
-                        Engineering manager building AI Agents at <a class="underline hover:text-gray-500" href="https://intercom.io/" target="_blank">Intercom</a>.
+                        Engineering manager building AI Agents at <a class="underline hover:text-gray-500" href="https://fin.ai" target="_blank">Fin</a>.
                         Formerly at 
                         <a class="underline hover:text-gray-500" href="https://www.spotify.com/" target="_blank">Spotify</a>,
                         <a class="underline hover:text-gray-500" href="https://www.last.fm/" target="_blank">Last.fm</a> and
@@ -42,7 +106,7 @@
         </div>
         <footer class="text-base 2xl:-my-9 md:px-14 px-7 my-7 flex flex-row space-x-6">
             <ul>
-                <a class="hover:text-gray-500" target="_blank" href="https://www.linkedin.com/in/stephentdooley/">Linkedin</a>
+                <a class="underline hover:text-gray-500" target="_blank" href="https://www.linkedin.com/in/stephentdooley/">Linkedin</a>
             </ul>
         </footer>
     </body>
